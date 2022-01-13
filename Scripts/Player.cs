@@ -5,8 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private BoxCollider2D boxCollider;
-
     private Vector3 moveDelta;
+    private RaycastHit2D hit; //Útil para chamar a caixa de colisão quando não quisermos que um personagem atravesse um objeto
 
     private void Start(){
         //Assim que o game inicia, uma caixa de colisão é criada.
@@ -40,7 +40,18 @@ public class Player : MonoBehaviour
             transform.localScale = new Vector3(-1,1,1);
         }
 
-        //Faz o sprite se mover.
-        transform.Translate(moveDelta * Time.deltaTime);
+        //Invoca a caixa de colisão do player a cada frame. Indicará se houve ou não colisão no eixo y. Se a caixa retornar null, o personagem pode se mover na direção apontada. Caso contrário, não.
+        hit = Physics2D.BoxCast(transform.position, boxCollider.size, 0, new Vector2(0,moveDelta.y), Mathf.Abs(moveDelta.y * Time.deltaTime), LayerMask.GetMask("Actor", "Blocking"));
+        if (hit.collider == null){
+            //Faz o sprite se mover (apenas no eixo y). Time.deltaTime serve para atualizar a posição no eixo com base no tempo que se passou desde o último frame até o atual. Lembrar que este tempo varia.
+            transform.Translate(0, moveDelta.y * Time.deltaTime, 0);
+        }
+
+        //Invoca a caixa de colisão do player a cada frame. Indicará se houve ou não colisão no eixo x. Se a caixa retornar null, o personagem pode se mover na direção apontada. Caso contrário, não.
+        hit = Physics2D.BoxCast(transform.position, boxCollider.size, 0, new Vector2(moveDelta.x,0), Mathf.Abs(moveDelta.x * Time.deltaTime), LayerMask.GetMask("Actor", "Blocking"));
+        if (hit.collider == null){
+            //Faz o sprite se mover (apenas no eixo x). Time.deltaTime serve para atualizar a posição no eixo com base no tempo que se passou desde o último frame até o atual. Lembrar que este tempo varia.
+            transform.Translate(moveDelta.x * Time.deltaTime, 0, 0);
+        }
     }
 }
