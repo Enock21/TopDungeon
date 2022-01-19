@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class cameraMotor : MonoBehaviour
+public class CameraMotor : MonoBehaviour
 {
     public Transform lookAt; //Indica a direção do player a ser focado
     public float boundX = 0.15f; //Indica até onde o player pode se mover no eixo x antes de a câmera começar a segui-lo
